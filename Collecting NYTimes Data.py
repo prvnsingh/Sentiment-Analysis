@@ -16,11 +16,9 @@ Created on Mon Mar 20 00:10:29 2017
 # articles = api.articles(sources[0]['id'], params)
 
 ################ NY Times API #############################################
-import sys
-import csv
-import json
-# reload(sys)
-# sys.setdefaultencoding('utf8')
+import sys, csv, json, imp
+imp.reload(sys)
+sys.setdefaultencoding('utf8')
 
 
 import requests
@@ -30,14 +28,11 @@ Python wrapper for the New York Times Archive API
 https://developer.nytimes.com/article_search_v2.json
 """
 
-
 class APIKeyException(Exception):
     def __init__(self, message): self.message = message
 
-
 class InvalidQueryException(Exception):
     def __init__(self, message): self.message = message
-
 
 class ArchiveAPI(object):
     def __init__(self, key=None):
@@ -57,8 +52,7 @@ class ArchiveAPI(object):
         Calls the archive API and returns the results as a dictionary.
         :param key: Defaults to the API key used to initialize the ArchiveAPI class.
         """
-        if not key:
-            key = self.key
+        if not key: key = self.key
         if (year < 1882) or not (0 < month < 13):
             # currently the Archive API only supports year >= 1882
             exception_str = 'Invalid query: See http://developer.nytimes.com/archive_api.json'
@@ -67,17 +61,16 @@ class ArchiveAPI(object):
         r = requests.get(url)
         return r.json()
 
-
 # Replace below key with your NYTimes Developer key
-api = ArchiveAPI('key')
+api = ArchiveAPI('02f7fee1ce094f0ea5dae1e54468f839')
 
-years = [2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007]
+years = [2018, 2017, 2016, 2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007]
 months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 for year in years:
     for month in months:
         mydict = api.query(year, month)
-        file_str = 'C:/Users/prvns/Downloads/StockPredictions-master/Data/nytimes/' + str(year) + '-' + '{:02}'.format(month) + '.json'
+        file_str = 'D:/DataPartition/Work Projects/Work Projects/StockPredictions/Data/nytimes/' + str(year) + '-' + '{:02}'.format(month) + '.json'
         with open(file_str, 'w') as fout:
             json.dump(mydict, fout)
         fout.close()
